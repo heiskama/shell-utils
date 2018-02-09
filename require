@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# This script checks whether the commands/tools matching the input parameters can be found in the system.
+# A missing one will produce an error message and result in exit status 1.
+
+# The case of no input parameters or empty input
+if [[ $# -eq 0 ]] || [[ -z $@ ]]; then
+  NAME=$0
+  echo "Usage: ${NAME##*/} [command] ..."
+  exit 0
+fi
+
+# Check for required commands/tools
+for i in $@; do
+  command -v $i > /dev/null 2>&1 || { echo >&2 "'$i' is needed but could not be found."; exit 1; } 
+done;
