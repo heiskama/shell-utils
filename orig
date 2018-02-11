@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Make backups with a timestamp.
+# file -> file.orig.YYYY-MM-DD_HH.MM.SS
+
+while test $# -gt 0
+do
+  case "$1" in
+    *)
+      cp -vpi $1 $1.orig.$(date +%F_%H.%M.%S)
+      ;;
+  esac
+  shift
+done
