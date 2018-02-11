@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Rerun this script with a lock to prevent it from being executed multiple times simultaneously.
+if [ "${FLOCKER}" != "$0" ]; then
+  env FLOCKER="$0" flock -en "$0" "$0" "$@"
+  EXIT_STATUS=$?
+  if [ $EXIT_STATUS -eq 1 ]; then
+    echo "Script $0 is already running." 
+  fi
+  exit $EXIT_STATUS
+fi
+
+# Insert long running code here
+
