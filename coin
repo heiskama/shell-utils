@@ -1,0 +1,8 @@
+#!/bin/bash
+COIN=$(cat /dev/urandom | tr -dc "0-1" | head -c 1)
+
+if [ "$COIN" == "1" ]; then
+	echo "Heads"
+else
+	echo "Tails"
+fi
