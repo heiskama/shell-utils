@@ -1,0 +1,8 @@
+#!/bin/bash
+if [[ $# -eq 1 ]]; then
+	cat /dev/urandom | tr -dc 'a-zA-Z0-9' | tr -d 'iloILO10' | fold -w $1 | head -n 1
+else
+	NAME=$0
+	echo "Generate passwords."
+	echo "Usage: ${NAME##*/} [length]"
+fi

@@ -3,6 +3,7 @@ A collection of bash scripts.
 
 | Command | Description |
 | --- | --- |
+| genpass | Generate passwords |
 | orig | Take backups with a timestamp |
 | require | Check for required tools/commands before running a script |
 | ssh-tunnel | Shortcut to establish SSH tunnels with sshuttle |
