@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Alias to ipinfo
+require ipinfo
+ipinfo
