@@ -1,0 +1,35 @@
+#!/bin/bash
+
+## Installation, country database file update and city database file addition:
+# sudo apt-get install geoip-bin
+# wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
+# gunzip GeoIP.dat.gz
+# sudo cp GeoIP.dat /usr/share/GeoIP/
+# wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+# gunzip GeoLiteCity.dat.gz
+# sudo cp GeoLiteCity.dat /usr/share/GeoIP/
+
+require geoiplookup
+
+IP=$1
+
+# Default is own ip
+if [ -z $IP ]; then
+  IP=$(curl -s http://checkip.amazonaws.com)
+fi
+
+HOST=$(dig @8.8.8.8 +noall +answer -x "$IP" | awk '{print $5}')
+
+if [ -z "$HOST" ]; then
+  HOST="---"
+else
+  HOST=$(echo $HOST | sed '1s/.$//') # Trim the last char
+fi
+
+COUNTRY=$(geoiplookup $IP)
+
+if [ -f /usr/share/GeoIP/GeoLiteCity.dat ]; then
+  CITY=$(geoiplookup -f /usr/share/GeoIP/GeoLiteCity.dat $IP)
+fi
+
+echo $IP, $HOST, $COUNTRY, $CITY | sed -e 's/GeoIP Country Edition: //g; s/GeoIP City Edition, Rev [0-9]*: //g'

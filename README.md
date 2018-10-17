@@ -7,6 +7,7 @@ A collection of bash scripts.
 | dice | Roll a dice |
 | genpass | Generate passwords |
 | humantime | Convert Linux time to human readable time |
+| ipinfo | Show public IP, hostname and geolocation all at once |
 | linuxtime | Convert human readable time to Linux time |
 | orig | Take backups with a timestamp |
 | require | Check for required tools/commands before running a script |
