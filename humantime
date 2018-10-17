@@ -1,0 +1,4 @@
+#!/bin/bash
+# Convert Linux time to human readable time
+# Output format: YYYY-MM-DD HH:MM:SS
+date -d @$1 +%F_%T | tr _ " "

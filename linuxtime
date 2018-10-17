@@ -1,0 +1,8 @@
+#!/bin/bash
+# Convert human readable time to Linux time
+# Input format: YYYY-MM-DD HH:MM:SS
+if [ -n "$2" ]; then
+  date --date="$1 $2" +%s
+else
+  date --date="$1" +%s
+fi
