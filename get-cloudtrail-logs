@@ -1,0 +1,19 @@
+#!/bin/bash
+require aws python
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 s3-bucket-url"
+  exit
+else
+  # Stop on errors
+  set -e
+  # Download logs
+  aws s3 cp $1 . --recursive
+  # Unzip
+  gunzip -v *.gz
+  # Make json output pretty
+  find . -name "*.json" | grep -v pretty.json | xargs -i sh -c "echo Reformatting {} ...; python -m json.tool {} > {}.pretty.json"
+  # Clean up the original non-formatted json files
+  find . -name "*.json" | grep -v pretty.json | xargs -i rm -fv {}
+  echo "Done."
+fi
