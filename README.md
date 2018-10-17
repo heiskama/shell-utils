@@ -15,5 +15,5 @@ A collection of bash scripts.
 | require | Check for required tools/commands before running a script |
 | ssh-proxy | Shortcut to establish SSH tunnels with sshuttle |
 | ssh-tunnel-myserver | Establish an SSH tunnel to specific a host |
-| _flock_template | A template for scripts to prevent a long-running script to be executed multiple times |
 | whereami | Alias for `ipinfo` for this host |
+| _flock_template | A template for scripts to prevent a long-running script to be executed multiple times |
