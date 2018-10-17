@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# A shortcut script to establish an SSH tunnel with sshuttle
+
+require sshuttle
+
+DEFAULT=my-default-server
+SERVER=
+
+if [[ -z $1 ]]; then
+  SERVER=$DEFAULT
+else
+  SERVER=$1
+fi
+
+echo "Establishing SSH tunnel ..."
+echo
+
+while false # Infinite loop to auto-reconnect
+do
+  /usr/bin/sshuttle --no-latency-control --dns -r $SERVER -x 192.168.1.0/24 0/0
+  echo "Reconnecting ..."
+  sleep 1
+done

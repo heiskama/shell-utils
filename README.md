@@ -8,5 +8,5 @@ A collection of bash scripts.
 | genpass | Generate passwords |
 | orig | Take backups with a timestamp |
 | require | Check for required tools/commands before running a script |
-| ssh-tunnel | Shortcut to establish SSH tunnels with sshuttle |
+| ssh-proxy | Shortcut to establish SSH tunnels with sshuttle |
 | _flock_template | A template for scripts to prevent a long-running script to be executed multiple times |
