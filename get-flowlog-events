@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Usage: get-flowlog-events [group] [stream] [startdate] [starttime] [enddate] [endtime] [outfile]
+# Example get-flowlog-events flow-log-group eni-0b59a37a385ea1452-all 2018-09-28 22:00:00 2018-09-28 22:10:00 myoutfile
+
+require linuxtime aws
+
+if [ -z $7 ]; then
+  echo Error. cat $0 for help
+  exit
+fi
+
+GROUP=$1
+STREAM=$2
+STARTTIME=$(linuxtime $3 $4)'000'
+ENDTIME=$(linuxtime $5 $6)'000'
+OUTFILE=$7
+
+echo Group: "$GROUP", Stream: "$STREAM", Start: $3 $4 as $STARTTIME, End: $5 $6 as $ENDTIME, Out: $OUTFILE
+aws logs get-log-events --log-group-name $GROUP --log-stream-name $STREAM --start-time $STARTTIME --end-time $ENDTIME > $OUTFILE
+ls -l $OUTFILE

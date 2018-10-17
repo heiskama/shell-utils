@@ -6,6 +6,7 @@ A collection of bash scripts.
 | coin | Toss a coin |
 | dice | Roll a dice |
 | genpass | Generate passwords |
+| get-flowlog-events | Get AWS flowlog events with human readable timestamps |
 | humantime | Convert Linux time to human readable time |
 | ipinfo | Show IP, hostname and geolocation all at once |
 | linuxtime | Convert human readable time to Linux time |
