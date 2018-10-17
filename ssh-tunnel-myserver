@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while false # infinite loop to auto-reconnect
+do
+  # ssh username@proxyserver -i keyfile -L localport:targethost:targetport -N
+  ssh ubuntu@amazon -i ~/.ssh/keyfile.pem -L 8080:localhost:8080 -N
+  echo "Reconnecting ..."
+  sleep 1
+done
