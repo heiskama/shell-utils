@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ -n "$AWS_PROFILE" ]; then
+  echo "Current profile: $AWS_PROFILE"
+else
+  echo "No profile set."
+fi
+
+aws sts get-caller-identity
