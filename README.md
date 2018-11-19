@@ -3,6 +3,8 @@ A collection of bash scripts.
 
 | Command | Description |
 | --- | --- |
+| aws-profiles | List AWS CLI profiles and switch between them |
+| aws-whoami | Show current AWS CLI profile, username and account info |
 | coin | Toss a coin |
 | dice | Roll a dice |
 | genpass | Generate passwords |
