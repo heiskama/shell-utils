@@ -1,0 +1,5 @@
+#!/bin/bash
+PROFILES=$(grep -e "^\[profile " ~/.aws/config | cut -d " " -f 2 | tr -d "]" | sed 's/.*/export AWS_PROFILE=&/')
+echo "Current profile is ($AWS_PROFILE) and available profiles are:"
+echo "$PROFILES"
+echo "export AWS_PROFILE="
