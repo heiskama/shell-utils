@@ -5,7 +5,9 @@ A collection of bash scripts.
 | --- | --- |
 | aws-profiles | List AWS CLI profiles and switch between them |
 | aws-whoami | Show current AWS CLI profile, username and account info |
+| bootstrap.sh | Install these scripts as temporary bash functions on an ad hoc shell |
 | coin | Toss a coin |
+| create-bootstrap.sh | Build `bootstrap.sh` |
 | dice | Roll a dice |
 | genpass | Generate passwords |
 | get-cloudtrail-logs | Get AWS CloudTrail logs and reformat into pretty json |
