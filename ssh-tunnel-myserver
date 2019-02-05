@@ -1,9 +1,18 @@
 #!/bin/bash
 
-while true # infinite loop to auto-reconnect
+# ssh username@proxyserver -i keyfile -L localport:targethost:targetport -N
+USERNAME=ubuntu
+PROXYSERVER=myec2.amazon.com
+KEYFILE=~/.ssh/keyfile.pem
+LOCALPORT=8080
+TARGETHOST=localhost
+TARGETPORT=80
+
+echo "Tunneling localhost:$LOCALPORT to $PROXYSERVER -> $TARGETHOST:$TARGETPORT"
+
+while true # Infinite loop to auto-reconnect
 do
-  # ssh username@proxyserver -i keyfile -L localport:targethost:targetport -N
-  ssh ubuntu@amazon -i ~/.ssh/keyfile.pem -L 8080:localhost:8080 -N
-  echo "Reconnecting ..."
-  sleep 1
+  ssh $USERNAME@$PROXYSERVER -i $KEYFILE -L $LOCALPORT:$TARGETHOST:$TARGETPORT -N
+  test $? -gt 130 && break; # Exit on CTRL-C
+  echo "Reconnecting ..."; sleep 1; # Else try to reconnect
 done
