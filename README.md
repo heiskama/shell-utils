@@ -4,6 +4,7 @@ A collection of bash scripts.
 | Command | Description |
 | --- | --- |
 | aws-profiles | List AWS CLI profiles and switch between them |
+| aws-vpc-info | Display information about a VPC |
 | aws-whoami | Show current AWS CLI profile, username and account info |
 | bootstrap.sh | Install these scripts as temporary bash functions on an ad hoc shell |
 | coin | Toss a coin |

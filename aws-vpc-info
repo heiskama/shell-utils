@@ -1,0 +1,161 @@
+#!/usr/bin/python3
+
+# Display information about a VPC
+
+# Example output
+"""
+Name: My Dev VPC
+VPC ID: vpc-12366815
+IPv4 CIDR: 172.32.0.0/16 172.33.0.0/16
+IPv6 CIDR: -
+EC2 instances: 9
+Subnets:
+    - Name: Public subnet 1
+      Subnet ID: subnet-067375865642bf721
+      IPv4 CIDR: 172.33.1.0/24
+      IPv6 CIDR: -
+      Availability Zone: ap-northeast-1c
+      EC2 instances: 2
+    - Name: Public subnet 2
+      Subnet ID: subnet-28b7ba60
+      IPv4 CIDR: 172.32.0.0/24
+      IPv6 CIDR: -
+      Availability Zone: ap-northeast-1d
+      EC2 instances: 7
+"""
+
+### Settings ###################################################################
+
+# default AWS credentials profile or a comma separated
+# list of profiles from ~/.aws/config
+my_default_profiles="default"
+
+################################################################################
+
+
+
+import boto3
+import argparse
+import sys
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Display information about a VPC.')
+parser.add_argument('-p', '--profile', default=my_default_profiles,
+                    help='specify AWS credentials profile')
+parser.add_argument('vpc_id', help='VPC ID')
+args = parser.parse_args()
+
+# Get VPC information
+session = boto3.Session(profile_name=args.profile)
+ec2 = session.client('ec2')
+vpcs = ""
+try:
+    vpcs = ec2.describe_vpcs(VpcIds=[args.vpc_id])
+except Exception as e:
+    print(e)
+    sys.exit(1)
+
+vpc = vpcs['Vpcs'][0]
+
+# Get "Name" from tag list to enable easy access later
+name = ""
+for item in vpc['Tags']:
+    if (item['Key'] == "Name"):
+        name = item['Value']
+        break
+
+# Concat IPv4 CIDR blocks for printing
+ipv4cidr = ""
+#for item in vpc['CidrBlockAssociationSet']:
+#    ipv4cidr += item['CidrBlock'] + " "
+try:
+    for item in vpc['CidrBlockAssociationSet']:
+        ipv4cidr += item['CidrBlock'] + " "
+except KeyError:
+    ipv4cidr = "-"
+
+# Concat IPv6 CIDR blocks for printing
+ipv6cidr = ""
+try:
+    for item in vpc['Ipv6CidrBlockAssociationSet']:
+        ipv6cidr += item['Ipv6CidrBlock'] + " "
+except KeyError:
+    ipv6cidr = "-"
+
+# Get subnet information
+subnets = ""
+try:
+    subnets = ec2.describe_subnets(
+        Filters=[
+            {
+                'Name': 'vpc-id',
+                'Values': [
+                    args.vpc_id,
+                ]
+            },
+        ]
+    )
+except Exception as e:
+    print(e)
+    sys.exit(1)
+
+# Get instance information
+instances = ""
+try:
+    instances = ec2.describe_instances(
+        Filters=[
+            {
+                'Name': 'vpc-id',
+                'Values': [
+                    args.vpc_id,
+                ]
+            },
+        ],
+        MaxResults=1000
+    )
+except Exception as e:
+    print(e)
+    sys.exit(1)
+
+vpcec2count = 0
+for reservation in instances["Reservations"]:
+    vpcec2count += len(reservation["Instances"])
+
+# Print VPC info
+print("Name: " + name)
+print("VPC ID: " + vpc['VpcId'])
+print("IPv4 CIDR: " + ipv4cidr)
+print("IPv6 CIDR: " + ipv6cidr)
+print("EC2 instances: " + str(vpcec2count))
+
+# Print subnet info
+print("Subnets:")
+for item in subnets['Subnets']:
+
+    # Get subnet name from tag list
+    subnetname = ""
+    for tagitem in item['Tags']:
+        if (tagitem['Key'] == "Name"):
+            subnetname = tagitem['Value']
+            break
+
+    # Get subnet ipv6 cidr blocks
+    subnetipv6cidr = ""
+    for blockitem in item['Ipv6CidrBlockAssociationSet']:
+        subnetipv6cidr += blockitem['Ipv6CidrBlock'] + " "
+    if (subnetipv6cidr is ""):
+        subnetipv6cidr = "-"
+
+    # Count subnet instances
+    subnetinstances = 0
+    for reservation in instances["Reservations"]:
+        for instanceitem in reservation["Instances"]:
+            if (instanceitem['SubnetId'] == item['SubnetId']):
+                subnetinstances += 1
+
+    print("    - Name: " + subnetname)
+    print("      Subnet ID: " + item['SubnetId'])
+    print("      IPv4 CIDR: " + item['CidrBlock'])
+    print("      IPv6 CIDR: " + subnetipv6cidr)
+    print("      Availability Zone: " + item['AvailabilityZone'])
+    print("      EC2 instances: " + str(subnetinstances))
