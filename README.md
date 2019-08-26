@@ -19,6 +19,7 @@ A collection of bash scripts.
 | orig | Take backups with a timestamp |
 | require | Check for required tools/commands before running a script |
 | ssh-key-fingerprint | Display SSH key fingerprint in SHA-1 and MD5 |
+| ssh-key-import | Copy keyfile to ~/.ssh/ and set permissions |
 | ssh-proxy | Shortcut to establish SSH tunnels with `sshuttle` |
 | ssh-tunnel-myserver | Establish an SSH tunnel to specific a host |
 | whereami | Alias for `ipinfo` for this host |

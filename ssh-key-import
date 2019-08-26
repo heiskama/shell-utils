@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Copy keyfile to ~/.ssh/ and set permissions
+
+mv -iv "$1" "$HOME/.ssh/" && chmod -v 600 "$HOME/.ssh/$1" && echo "Key imported successfully"
