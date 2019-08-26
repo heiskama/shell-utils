@@ -9,6 +9,7 @@ A collection of bash scripts.
 | coin | Toss a coin |
 | create-bootstrap.sh | Build `bootstrap.sh` |
 | dice | Roll a dice |
+| file-attributes | Save file permissions and ownership information to a file for later recovery |
 | genpass | Generate passwords |
 | get-cloudtrail-logs | Get AWS CloudTrail logs and reformat into pretty json |
 | get-flowlog-events | Get AWS flowlog events with human readable timestamps |
