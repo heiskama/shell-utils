@@ -3,6 +3,7 @@ A collection of bash scripts.
 
 | Command | Description |
 | --- | --- |
+| aws-instance-info | Display information about an EC2 instance |
 | aws-profiles | List AWS CLI profiles and switch between them |
 | aws-vpc-info | Display information about a VPC |
 | aws-whoami | Show current AWS CLI profile, username and account info |

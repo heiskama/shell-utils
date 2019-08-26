@@ -1,0 +1,98 @@
+#!/usr/bin/python3
+
+# Display information about an EC2 instance.
+
+# Example output
+"""
+Profile:            default
+Name:               My webapp instance
+InstanceId:         i-0c247b20e18bab1e9
+KeyName:            Dev_Instance_Key.pem
+PublicIpAddress:    52.68.123.117
+PublicDnsName:      ec2-52-68-123-117.ap-northeast-1.compute.amazonaws.com
+PrivateIpAddress:   172.32.17.122
+PrivateDnsName:     ip-172-32-17-122.ap-northeast-1.compute.internal
+VpcId:              vpc-12969425
+SubnetId:           subnet-62b8ba60
+AvailabilityZone:   ap-northeast-1d
+Volumes:            vol-0f6fda2f7319129c6
+InstanceType:       t3.xlarge
+State:              running
+--------------------
+Tags:
+Admin = John Smith
+Project = WebApp
+Name = My webapp instance
+"""
+
+### Settings ###################################################################
+
+# default AWS credentials profile or a comma separated
+# list of profiles from ~/.aws/config
+my_default_profiles="default"
+
+################################################################################
+
+
+
+import boto3
+import argparse
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Display information about an EC2 instance.')
+parser.add_argument('-p', '--profile', default=my_default_profiles,
+                    help='specify AWS credentials profile or a comma separated list of profiles')
+parser.add_argument('instance_id', help='EC2 Instance ID')
+args = parser.parse_args()
+profiles = args.profile.split(',')
+
+# Search for the instance using all the specified profiles
+for profile in profiles:
+
+    session = boto3.Session(profile_name=profile)
+    ec2 = session.client('ec2')
+    response = ""
+    try:
+        response = ec2.describe_instances(InstanceIds=[args.instance_id])
+    except Exception as e:
+        print("[Profile: %s] %s" % (profile, e))
+        continue
+
+    # Get "Name" from tag list to enable easy access later
+    tags = response['Reservations'][0]['Instances'][0]['Tags']
+    name = ""
+    non_name_tags = 0
+    for item in tags:
+        if (item['Key'] == "Name"):
+            name = item['Value']
+        else:
+            non_name_tags += 1
+
+    # Concat volume ids for printing
+    volumes = ""
+    for item in response['Reservations'][0]['Instances'][0]['BlockDeviceMappings']:
+        volumes = volumes + item['Ebs']['VolumeId'] + " "
+
+    # Print basic instance info
+    print("Profile:            " + profile)
+    print("Name:               " + name)
+    print("InstanceId:         " + response['Reservations'][0]['Instances'][0]['InstanceId'])
+    print("KeyName:            " + response['Reservations'][0]['Instances'][0]['KeyName'] + ".pem")
+    print("PublicIpAddress:    " + response['Reservations'][0]['Instances'][0]['PublicIpAddress'])
+    print("PublicDnsName:      " + response['Reservations'][0]['Instances'][0]['PublicDnsName'])
+    print("PrivateIpAddress:   " + response['Reservations'][0]['Instances'][0]['PrivateIpAddress'])
+    print("PrivateDnsName:     " + response['Reservations'][0]['Instances'][0]['PrivateDnsName'])
+    print("VpcId:              " + response['Reservations'][0]['Instances'][0]['VpcId'])
+    print("SubnetId:           " + response['Reservations'][0]['Instances'][0]['SubnetId'])
+    print("AvailabilityZone:   " + response['Reservations'][0]['Instances'][0]['Placement']['AvailabilityZone'])
+    print("Volumes:            " + volumes)
+    print("InstanceType:       " + response['Reservations'][0]['Instances'][0]['InstanceType'])
+    print("State:              " + response['Reservations'][0]['Instances'][0]['State']['Name'])
+
+    # Print all tags but skip "Name" since it's already printed above
+    if (non_name_tags > 0):
+        print("--------------------")
+        print("Tags:")
+        for item in tags:
+            if (item['Key'] is not "Name"):
+                print("%s = %s" % (item['Key'], item['Value']))
