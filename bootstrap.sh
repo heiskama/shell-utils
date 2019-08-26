@@ -166,4 +166,44 @@ echo "export AWS_PROFILE="
 
 
 
-echo Bootstrap complete: require orig ipinfo whereami genpass linuxtime humantime coin dice aws-whoami aws-profiles
+function file-attributes() {
+#!/bin/bash
+
+# This script can be used to take a backup of file permissions and ownership a restore them later
+
+function file-attibutes-save() {
+	find . | xargs -i sh -c "stat --format=\"%a %A %u %g %U %G %n\" \"{}\"" > "$1"
+}
+
+function file-attibutes-restore() {
+	cat "$1" | while read i; do
+	  MODE=$(echo "$i" | cut -d " " -f 1)
+	  USER=$(echo "$i" | cut -d " " -f 3)
+	  GROUP=$(echo "$i" | cut -d " " -f 4)
+	  FILENAME=$(echo "$i" | cut -d " " -f 7-)
+	  chmod -v "$MODE" "$FILENAME"
+	  chown -v "$USER":"$GROUP" "$FILENAME"
+	done
+}
+
+# The case of no input parameters or empty input
+if [[ $# -eq 0 ]] || [[ -z $@ ]]; then
+  NAME=$0
+  echo "Usage: ${NAME##*/} [--save-to|--restore-from] filename"
+  exit 0
+fi
+
+
+# Correct number of parameters
+if [[ $# -eq 2 ]]; then
+	if [[ "$1" == "--save-to" ]]; then
+		file-attibutes-save "$2"
+	elif [[ "$1" == "--restore-from" ]]; then
+		file-attibutes-restore "$2"
+	fi
+fi
+}
+
+
+
+echo Bootstrap complete: require orig ipinfo whereami genpass linuxtime humantime coin dice aws-whoami aws-profiles file-attributes

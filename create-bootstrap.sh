@@ -5,7 +5,7 @@
 # Settings
 DIR=~/bin/
 FILE=bootstrap.sh
-INCLUDES="require orig ipinfo whereami genpass linuxtime humantime coin dice aws-whoami aws-profiles"
+INCLUDES="require orig ipinfo whereami genpass linuxtime humantime coin dice aws-whoami aws-profiles file-attributes"
 
 # Begin code
 function create_bootstrap() {
@@ -17,7 +17,7 @@ function create_bootstrap() {
          # Check if the file exists
          if [ -f "$1" ]; then
            echo "function $1() {" >> $FILE
-           cat "$1" >> $FILE
+           cat "$1" | grep -v -e "^#!" >> $FILE
            echo "}" >> $FILE
            printf "\n\n\n" >> $FILE
          else
