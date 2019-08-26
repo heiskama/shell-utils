@@ -18,6 +18,9 @@ A collection of bash scripts.
 | linuxtime | Convert human readable time to Linux time |
 | orig | Take backups with a timestamp |
 | require | Check for required tools/commands before running a script |
+| secrets-create | Create an encrypted secret in ~/.secrets/ |
+| secrets-list | List secrets in ~/.secrets/ |
+| secrets-show | Decrypt/show a secret from ~/.secrets/ |
 | ssh-key-fingerprint | Display SSH key fingerprint in SHA-1 and MD5 |
 | ssh-key-import | Copy keyfile to ~/.ssh/ and set permissions |
 | ssh-proxy | Shortcut to establish SSH tunnels with `sshuttle` |
