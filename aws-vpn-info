@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Display information about a VPN connection
+# TODO: rewrite with python to get a prettier output
+
+aws --output text ec2 describe-vpn-connections --vpn-connection-ids $1 | grep -E "(TAGS|vpn_connection|customer_gateway_id|vpn_gateway_id)"
