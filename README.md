@@ -1,5 +1,5 @@
-# bash-utils
-A collection of bash scripts.
+# shell-utils
+A collection of Bash and Python scripts.
 
 | Command | Description |
 | --- | --- |
