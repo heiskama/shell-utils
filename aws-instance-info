@@ -37,6 +37,7 @@ my_default_profiles="default"
 
 import boto3
 import argparse
+import re
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description='Display information about an EC2 instance.')
@@ -77,13 +78,13 @@ for profile in profiles:
     print("Profile:            " + profile)
     print("Name:               " + name)
     print("InstanceId:         " + response['Reservations'][0]['Instances'][0]['InstanceId'])
-    print("KeyName:            " + response['Reservations'][0]['Instances'][0]['KeyName'] + ".pem")
-    print("PublicIpAddress:    " + response['Reservations'][0]['Instances'][0]['PublicIpAddress'])
-    print("PublicDnsName:      " + response['Reservations'][0]['Instances'][0]['PublicDnsName'])
+    print("KeyName:            " + re.sub("^-\.pem$", "-", response['Reservations'][0]['Instances'][0].get('KeyName', "-") + ".pem")) # Print "keyname.pem" or "-"
+    print("PublicIpAddress:    " + response['Reservations'][0]['Instances'][0].get('PublicIpAddress', "-")) # Public IP might not exist. Default to "-"
+    print("PublicDnsName:      " + response['Reservations'][0]['Instances'][0].get('PublicDnsName', "-"))
     print("PrivateIpAddress:   " + response['Reservations'][0]['Instances'][0]['PrivateIpAddress'])
-    print("PrivateDnsName:     " + response['Reservations'][0]['Instances'][0]['PrivateDnsName'])
-    print("VpcId:              " + response['Reservations'][0]['Instances'][0]['VpcId'])
-    print("SubnetId:           " + response['Reservations'][0]['Instances'][0]['SubnetId'])
+    print("PrivateDnsName:     " + response['Reservations'][0]['Instances'][0].get('PrivateDnsName', "-"))
+    print("VpcId:              " + response['Reservations'][0]['Instances'][0].get('VpcId', "-"))
+    print("SubnetId:           " + response['Reservations'][0]['Instances'][0].get('SubnetId', "-"))
     print("AvailabilityZone:   " + response['Reservations'][0]['Instances'][0]['Placement']['AvailabilityZone'])
     print("Volumes:            " + volumes)
     print("InstanceType:       " + response['Reservations'][0]['Instances'][0]['InstanceType'])
