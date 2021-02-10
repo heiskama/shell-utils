@@ -1,0 +1,18 @@
+#!/bin/bash
+
+YTD_URL=https://yt-dl.org/latest/youtube-dl
+YTD_PATH=/usr/bin/youtube-dl
+TMP_PATH=/tmp/youtube-dl
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 
+   exit 1
+fi
+
+set -e
+[ ! -f $TMP_PATH ] && wget --no-check-certificate $YTD_URL -O $TMP_PATH
+[ -f $YTD_PATH ] && mv -fv $YTD_PATH $YTD_PATH.orig || echo "New installation"
+mv -v $TMP_PATH $YTD_PATH
+[ -f $YTD_PATH.orig ] && chmod --reference=$YTD_PATH.orig $YTD_PATH || chmod 755 $YTD_PATH
+[ -f $YTD_PATH.orig ] && chown --reference=$YTD_PATH.orig $YTD_PATH || chown root:root $YTD_PATH
+[ -f $YTD_PATH.orig ] && rm -v $YTD_PATH.orig
