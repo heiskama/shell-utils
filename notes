@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# This script allows to save, add and delete lines of text, e.g. take notes.
+# The notes are saved at the bottom of this file in the DATA BLOCK.
+HELP_TEXT="Available arguments: help debug show add del"
+
+THIS=$(readlink -f $0)
+DATABLOCK_SEPARATOR="#§#§#§"
+DATA_START_LINE=$(grep -n "$DATABLOCK_SEPARATOR" "$THIS" | cut -d ":" -f 1 | tail -n 1)
+DATA_START_LINE=$((DATA_START_LINE+1))
+DATA=$(sed -n "$DATA_START_LINE,$ p" "$THIS")
+
+case $1 in
+
+  help | -h | --h | -help | --help)
+    echo "$HELP_TEXT"
+    ;;
+
+  debug)
+    echo ARGS="$@"
+    echo THIS="$THIS"
+    echo DATABLOCK_SEPARATOR="$DATABLOCK_SEPARATOR"
+    echo DATA_START_LINE="$DATA_START_LINE"
+    ;;
+
+  show | list | view)
+    echo "$DATA" | grep -n ""
+    ;;
+
+  add | save | store)
+    shift 1
+    echo "$@" >> "$THIS"
+    echo Saved: "$@"
+    ;;
+  
+  del | delete | rm | remove)
+    shift 1
+    DELETE=$((DATA_START_LINE-1+$1))
+    LINE=$(sed "$DELETE q;d" "$THIS")
+    sed -i "$DELETE d" "$THIS"
+    echo Deleted: "$LINE"
+    ;;
+
+  *)
+    echo "Unknown argument: $1"
+    echo "$HELP_TEXT"
+    ;;
+esac
+
+exit
+
+#§#§#§ DATA BLOCK
